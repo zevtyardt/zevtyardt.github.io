@@ -1,0 +1,11 @@
+{
+  "files": {
+    "main.css": "/alternation-js/static/css/main.089e417e.css",
+    "main.js": "/alternation-js/static/js/main.ee1bd21a.js",
+    "index.html": "/alternation-js/index.html"
+  },
+  "entrypoints": [
+    "static/css/main.089e417e.css",
+    "static/js/main.ee1bd21a.js"
+  ]
+}
