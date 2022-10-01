@@ -23,11 +23,11 @@ const reverseString = (s) => {
 };
 
 function* range(start, stop, step) {
-  if (typeof stop === "undefined") {
+  if (typeof stop == "undefined") {
     stop = start;
     start = 0;
   }
-  if (typeof step === "undefined") step = 1;
+  if (typeof step == "undefined") step = 1;
   if ((step > 0 && start >= stop) || (step < 0 && start <= stop)) return;
   for (var i = start; step > 0 ? i < stop : i > stop; i += step) {
     yield i;
@@ -57,7 +57,7 @@ const buildTrie = (arr) => {
       if (!value[token]) {
         value[token] = {};
       }
-      if (index === len(word) - 1) value[token][""] = {};
+      if (index == len(word) - 1) value[token][""] = {};
     }
   }
 
@@ -65,7 +65,7 @@ const buildTrie = (arr) => {
     const joined = {};
     for (let [k, v] of Object.entries(t)) {
       v = join(v);
-      if (k && len(v) === 1 && !v[""]) {
+      if (k && len(v) == 1 && !v[""]) {
         const [k2, v2] = Object.entries(v)[0];
         joined[k + k2] = v2;
       } else {
@@ -97,7 +97,7 @@ class RegexGenerator {
 
   serialize_regex = (d, level = 0) => {
     this.level = level;
-    if (!d && level === 0) d = this.trie;
+    if (!d && level == 0) d = this.trie;
     let s = "";
 
     this._log("serializer:input", { d: d, level: level });
@@ -179,7 +179,7 @@ class RegexGenerator {
   // all_ functions
   all_len1(k) {
     return k.every((i) => {
-      return len(i) === 1;
+      return len(i) == 1;
     });
   }
   all_len01(k) {
@@ -189,7 +189,7 @@ class RegexGenerator {
       })
       .sort();
     const listSet = [...new Set(k)];
-    return JSON.stringify(listSet) === "[0,1]";
+    return JSON.stringify(listSet) == "[0,1]";
   }
   all_values_not(v) {
     return v.every((i) => {
@@ -203,7 +203,7 @@ class RegexGenerator {
         return JSON.stringify(i);
       })
     );
-    return len(values) > 1 && len(uniq) === 1;
+    return len(values) > 1 && len(uniq) == 1;
   }
   all_digits(l) {
     const re = /^\d+$/;
@@ -214,11 +214,11 @@ class RegexGenerator {
 
   // is_ & has_ functions
   is_optional(d) {
-    if (len(d.keys) === 2) {
+    if (len(d.keys) == 2) {
       const items = d.items.sort();
       return (
         !items[0][0] &&
-        ('{"":{}}' === JSON.stringify(items[1][1]) || len(items[1][1]) === 1)
+        ('{"":{}}' == JSON.stringify(items[1][1]) || len(items[1][1]) == 1)
       );
     }
   }
@@ -236,15 +236,15 @@ class RegexGenerator {
   is_unescape_char_in_string(s) {
     for (let [index, char] of Object.entries(s)) {
       if (this.ESCAPE_CHARS.includes(char)) {
-        if (index === 0) {
-          if (char === "\\" && this.ESCAPE_CHARS.includes(s[index + 1])) {
+        if (index == 0) {
+          if (char == "\\" && this.ESCAPE_CHARS.includes(s[index + 1])) {
             continue;
           }
           return true;
         } else {
           if (!s[index - 1].endsWith("\\")) {
             if (index < len(s)) {
-              if (char === "\\" && this.ESCAPE_CHARS.includes(s[index + 1])) {
+              if (char == "\\" && this.ESCAPE_CHARS.includes(s[index + 1])) {
                 continue;
               }
             }
@@ -291,7 +291,7 @@ class RegexGenerator {
     let s,
       j = l.splice(1);
 
-    if (len(j) === 0) {
+    if (len(j) == 0) {
       s = "";
     } else {
       this._log("as_optional_group:j", j);
@@ -327,11 +327,12 @@ class RegexGenerator {
     const find_suffix_dogroup = (l) => {
       this._log("as_group:find_suffix_dogroup:input", l);
       let suffix, dogroup;
+
       suffix = len(l) > 1 ? this.longest_suffix(l) : "";
       this._log("as_group:find_suffix_dogroup:suffix", suffix);
-      suffix = !this.is_unescape_char_in_string(suffix) ? suffix : "";
-      this._log("as_group:find_suffix_dogroup:suffix_2", suffix);
-      dogroup = suffix !== "" ? len(suffix) > 0 : do_group;
+      //suffix = this.is_unescape_char_in_string(suffix) ? suffix : "";
+      //this._log("as_group:find_suffix_dogroup:suffix_2", suffix);
+      dogroup = suffix != "" ? len(suffix) > 0 : do_group;
       this._log("as_group:find_suffix_dogroup:dogroup", dogroup);
       return [suffix, dogroup];
     };
@@ -375,7 +376,7 @@ class RegexGenerator {
     );
   }
   longest_preffix(l) {
-    if (len(l) === 0) return "";
+    if (len(l) == 0) return "";
     let prefix = l[0];
     let longest = Math.min(
       ...l.map((i) => {
@@ -388,14 +389,14 @@ class RegexGenerator {
       for (let i of range(1, length + 1)) {
         let x_ = [...x].splice(0, i).join("");
         let y_ = [...y].splice(0, i).join("");
-        if (x_ !== y_) return i - 1;
+        if (x_ != y_) return i - 1;
       }
       return length;
     };
 
     for (let i of range(1, len(l))) {
       longest = longest_prefix_2strings(prefix, l[i], longest);
-      if (longest === 0) return "";
+      if (longest == 0) return "";
     }
     return reverseString([...prefix].splice(0, longest));
   }
@@ -474,7 +475,7 @@ class RegexGenerator {
     this._log("condense_len1:input", l);
     const chr2group = [];
     for (let char of l.sort()) {
-      if (len(char) === 1) chr2group.push(char);
+      if (len(char) == 1) chr2group.push(char);
     }
     this._log("condense_len1:chr2group", chr2group);
     l = l.filter((v) => {
@@ -501,7 +502,7 @@ class RegexGenerator {
       if (!prefixes[suf]) prefixes[suf] = [];
       prefixes[suf].push(char);
       l = l.filter((i) => {
-        return i !== char;
+        return i != char;
       });
     }
     this._log("condense_prefix:prefixes", prefixes);
@@ -528,18 +529,18 @@ class RegexGenerator {
     while (len(chars) > 0) {
       let i = 1;
       while (i < len(chars)) {
-        if (chars[i] !== String.fromCharCode(chars[i - 1].charCodeAt() + 1))
+        if (chars[i] != String.fromCharCode(chars[i - 1].charCodeAt() + 1))
           break;
         i++;
       }
       if (i <= 1) {
         condensed.push(chars[0].toString());
-      } else if (i === 2) {
+      } else if (i == 2) {
         condensed.push(`${chars[0]}${chars[1]}`);
       } else {
         condensed.push(`${chars[0]}-${chars[i - 1]}`);
       }
-      if (i === len(chars)) {
+      if (i == len(chars)) {
         chars = [];
       } else {
         chars.splice(0, i);
